@@ -40,38 +40,42 @@ app.put("/blogs/:title", (req, res) => {
     res.send("invalid request");
     return;
   }
-  const title = req.body.title;
-  const content = req.body.content;
-  // if (fs.existsSync(title)) console.log(title);
+  const title = req.params.title;
 
-  if (req.body.title === req.params.title) {
+  if (fs.existsSync(title)) {
+    const content = req.body.content;
     fs.writeFileSync(title, content);
     res.end(`Ok! The content of the title "${title}" has been updated!`);
   } else {
     // Send response with error message
-    res.end("This post does not exist!");
+    res.status(404);
+    res.send("This post does not exist!");
     return;
   }
 });
 
 app.post("/blogs", (req, res) => {
   // How to get the title and content from the request??
+  if (isInvalid(req)) {
+    res.status(400);
+    res.send("Invalid request");
+    return;
+  }
   const title = req.body.title;
   const content = req.body.content;
-  fs.writeFileSync(title, content);
-  res.end("ok. The first blog is created");
+  if (fs.existsSync(title)) {
+    res.send("This post already exists!");
+    return;
+  } else fs.writeFileSync(title, content);
+  res.end("Ok. The first blog is created");
 });
 
 function isInvalid(req) {
-  if (
+  return (
     typeof req.body == "undefined" ||
     typeof req.body.title == "undefined" ||
     typeof req.body.content == "undefined"
-  ) {
-    return true;
-  } else {
-    return false;
-  }
+  );
 }
 
 app.listen(3000);
