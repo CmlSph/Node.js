@@ -39,16 +39,16 @@ const punchlines = [
   "help people learn programing",
 ];
 
+const randomSubject = getRandomElement(subjects);
+const randomPunchline = getRandomElement(punchlines);
+
 function drawCard(subject, punchline) {
   // YOUR CODE GOES IN HERE
-  const cardData = {
-    subject: getRandomElement(subjects),
-    punchline: getRandomElement(punchlines),
-  };
-
-  const card = `${cardData.subject} is great to ${cardData.punchline}`;
-  const template = Handlebars.compile(card);
-  console.log(template({ card }));
+  return `${subject} is great to ${punchline}`;
 }
 
-drawCard();
+const card = drawCard(randomSubject, randomPunchline);
+
+const template = Handlebars.compile("{{card}}");
+
+console.log(template({ card }));

@@ -18,7 +18,12 @@ app.get("/", (req, res) => {
 });
 app.post("/weather", (req, res) => {
   const city = req.body.cityName;
-
+  if (!city) {
+    res.render("index", {
+      weatherText: `You didn't provide a city.`,
+    });
+    return;
+  }
   axios
     .get(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
